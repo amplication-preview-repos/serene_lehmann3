@@ -1,0 +1,65 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DB_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Meal {
+  createdAt DateTime @default(now())
+  id        String   @id @default(cuid())
+  menu      Menu?    @relation(fields: [menuId], references: [id])
+  menuId    String?
+  updatedAt DateTime @updatedAt
+  user      User?    @relation(fields: [userId], references: [id])
+  userId    String?
+}
+
+model Menu {
+  createdAt DateTime @default(now())
+  id        String   @id @default(cuid())
+  meals     Meal[]
+  updatedAt DateTime @updatedAt
+}
+
+model Billing {
+  createdAt DateTime @default(now())
+  id        String   @id @default(cuid())
+  updatedAt DateTime @updatedAt
+  user      User?    @relation(fields: [userId], references: [id])
+  userId    String?
+}
+
+model Feedback {
+  createdAt DateTime @default(now())
+  id        String   @id @default(cuid())
+  updatedAt DateTime @updatedAt
+  user      User?    @relation(fields: [userId], references: [id])
+  userId    String?
+}
+
+model Payment {
+  createdAt DateTime @default(now())
+  id        String   @id @default(cuid())
+  updatedAt DateTime @updatedAt
+  user      User?    @relation(fields: [userId], references: [id])
+  userId    String?
+}
+
+model User {
+  billings  Billing[]
+  createdAt DateTime   @default(now())
+  email     String?    @unique
+  feedbacks Feedback[]
+  firstName String?
+  id        String     @id @default(cuid())
+  lastName  String?
+  meals     Meal[]
+  password  String
+  payments  Payment[]
+  roles     Json
+  updatedAt DateTime   @updatedAt
+  username  String     @unique
+}
